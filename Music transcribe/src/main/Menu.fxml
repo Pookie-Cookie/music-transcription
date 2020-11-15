@@ -30,7 +30,7 @@
             <Font name="Bodoni MT Black" size="43.0" />
          </font>
       </Label>
-      <Button layoutX="107.0" layoutY="276.0" mnemonicParsing="false" prefHeight="52.0" prefWidth="160.0" text="Sign up!">
+      <Button layoutX="107.0" layoutY="276.0" mnemonicParsing="false" onAction="#closeButtonOnAction" prefHeight="52.0" prefWidth="160.0" text="Sign up!">
          <font>
             <Font name="AmdtSymbols" size="21.0" />
          </font>
