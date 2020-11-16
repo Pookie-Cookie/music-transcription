@@ -2,34 +2,19 @@ package main;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.SelectionMode;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.ToggleGroup;
 import javafx.stage.Stage;
 
 import java.awt.Desktop;
-import java.awt.desktop.*;
 import java.net.MalformedURLException;
-import java.net.URI;
 import java.net.URISyntaxException;
 
 public class Menu_Controller implements Initializable {
-	private Button closeButton;
 	
 	public void closeButtonOnAction(ActionEvent event) {
 		System.out.println("Hello?");
@@ -46,6 +31,15 @@ public class Menu_Controller implements Initializable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	public void logInButton(ActionEvent event) throws IOException {
+		Parent TranscribeParent = FXMLLoader.load(getClass().getResource("Transcribe_tab.fxml"));
+		Scene TranscribeScene = new Scene(TranscribeParent);
+		
+		Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
+		window.setScene(TranscribeScene);
+		window.show();
 	}
 
 	@Override
