@@ -1,9 +1,12 @@
 package main;
-import java.awt.Desktop;
+import java.awt.FileDialog;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+
+import javax.swing.JFrame;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -25,9 +28,12 @@ public class Transcribe_controller implements Initializable{
 	}
 	
 	public void choosefile(ActionEvent event) throws IOException{
-		File file = new File ("");
-		Desktop desktop = Desktop.getDesktop();
-		desktop.open(file);
+		FileDialog fd = new FileDialog(new JFrame());
+		fd.setVisible(true);
+		File[] f = fd.getFiles();
+		if(f.length > 0){
+		    System.out.println(fd.getFiles()[0].getAbsolutePath());
+		}
 	}
 
 	@Override
