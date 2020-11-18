@@ -42,8 +42,15 @@ public class Transcribe_controller implements Initializable{
 	}
 	
 	public void uploadFile(ActionEvent event) throws IOException{
+		FileDialog fd = new FileDialog(new JFrame());
+		fd.setVisible(true);
+		File[] f = fd.getFiles();
+		if(f.length > 0){
+		    System.out.println(fd.getFiles()[0].getAbsolutePath());
+		}
+		String filePath = fd.getFiles()[0].getAbsolutePath();
 		HttpClient client = HttpClient.newHttpClient();
-		HttpRequest request = HttpRequest.newBuilder().uri(URI.create("http://www.sonicapi.com/docs/api/analyze-melody")).build();	
+		HttpRequest request = HttpRequest.newBuilder().GET().headers("access_id", "3acb1e15-62e0-4988-acdb-aaff8d674047", "input_file", filePath).uri(URI.create("http://www.sonicapi.com/docs/api/analyze-melody")).build();	
 		client.sendAsync(request, HttpResponse.BodyHandlers.ofString()).thenApply(HttpResponse::body).thenAccept(System.out::println).join();
 		
 	}
