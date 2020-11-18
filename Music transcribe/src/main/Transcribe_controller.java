@@ -2,7 +2,11 @@ package main;
 import java.awt.FileDialog;
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 import java.net.URL;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.util.ResourceBundle;
 
 import javax.swing.JFrame;
@@ -27,13 +31,21 @@ public class Transcribe_controller implements Initializable{
 		window.show();
 	}
 	
-	public void choosefile(ActionEvent event) throws IOException{
+	public void chooseFile(ActionEvent event) throws IOException{
 		FileDialog fd = new FileDialog(new JFrame());
 		fd.setVisible(true);
 		File[] f = fd.getFiles();
 		if(f.length > 0){
 		    System.out.println(fd.getFiles()[0].getAbsolutePath());
+		    String filePath = fd.getFiles()[0].getAbsolutePath();
 		}
+	}
+	
+	public void uploadFile(ActionEvent event) throws IOException{
+		HttpClient client = HttpClient.newHttpClient();
+		HttpRequest request = HttpRequest.newBuilder().uri(URI.create("http://www.sonicapi.com/docs/api/analyze-melody")).build();	
+		client.sendAsync(request, HttpResponse.BodyHandlers.ofString()).thenApply(HttpResponse::body).thenAccept(System.out::println).join();
+		
 	}
 
 	@Override
