@@ -17,7 +17,7 @@ import java.net.URISyntaxException;
 public class Menu_Controller implements Initializable {
 	
 	public void closeButtonOnAction(ActionEvent event) {
-		System.out.println("Hello?");
+		System.out.println("Hello");
 		Desktop d = Desktop.getDesktop();
 		try {
 			d.browse(new URL("https://www.youtube.com/watch?v=wpV-gGA4PSk").toURI());
