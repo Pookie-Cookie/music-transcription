@@ -50,7 +50,7 @@ public class Transcribe_controller implements Initializable{
 		}
 		String filePath = fd.getFiles()[0].getAbsolutePath();
 		HttpClient client = HttpClient.newHttpClient();
-		HttpRequest request = HttpRequest.newBuilder().GET().headers("access_id", "3acb1e15-62e0-4988-acdb-aaff8d674047", "input_file", filePath).uri(URI.create("http://www.sonicapi.com/docs/api/analyze-melody")).build();	
+		HttpRequest request = HttpRequest.newBuilder().GET().headers("access_id", "ff2092da-30d6-4ab3-b2eb-a1bd423f60a9", "input_file", "http://www.sonicapi.com/music/brown_eyes_by_ueberschall.mp3").uri(URI.create("https://api.sonicAPI.com/analyze/melody")).build();	
 		client.sendAsync(request, HttpResponse.BodyHandlers.ofString()).thenApply(HttpResponse::body).thenAccept(System.out::println).join();
 		
 	}
