@@ -14,6 +14,8 @@ import java.awt.Desktop;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 
+
+
 public class Menu_Controller implements Initializable {
 	
 	public void closeButtonOnAction(ActionEvent event) {
