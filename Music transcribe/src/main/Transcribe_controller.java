@@ -42,6 +42,7 @@ public class Transcribe_controller implements Initializable{
 	}
 	
 	public void uploadFile(ActionEvent event) throws IOException{
+		
 		FileDialog fd = new FileDialog(new JFrame());
 		fd.setVisible(true);
 		File[] f = fd.getFiles();

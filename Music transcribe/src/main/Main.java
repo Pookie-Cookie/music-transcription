@@ -9,12 +9,17 @@ import javafx.stage.Stage;
 import com.mongodb.DBCollection;
 import com.mongodb.MongoClient;
 import com.mongodb.DBCursor;
-import com.mongodb.Mongo;
 
 import java.net.UnknownHostException;
 
+import org.bson.BsonObjectId;
+import org.bson.types.ObjectId;
+import org.bson.Document;
+
+import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
-import com.mongodb.DBObject;
+
+
 
 
 public class Main extends Application{
@@ -28,18 +33,21 @@ public class Main extends Application{
 		stage.show();
 	}
 	
+	@SuppressWarnings("deprecation")
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		try {
-			MongoClient mongoClient = new MongoClient("localhost", 27017);
-			DB db = mongoClient.getDB("Music-transcription-DB");
-			System.out.println("Connection established");
-			
-		}
-		catch (UnknownHostException e){
-			e.printStackTrace();
-		}
+		MongoClient mongoClient = new MongoClient("localhost", 27017);
+		DB db = mongoClient.getDB("Music-transcription-DB");
+		DBCollection coll = db.getCollection("music");
+		
+//		BasicDBObject doc = new BasicDBObject();
+//		doc.append("username", "Pookie_Cookie");
+//		doc.append("password", "12345");
+//		coll.insert(doc);
+		
+		System.out.println("Connection established");
 		launch(args);
+		
+		mongoClient.close();
 	}
 
 }
