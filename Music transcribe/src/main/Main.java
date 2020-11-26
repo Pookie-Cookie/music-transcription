@@ -37,10 +37,6 @@ public class Main extends Application{
 	
 	@SuppressWarnings("deprecation")
 	public static void main(String[] args) {
-//		BasicDBObject doc = new BasicDBObject();
-//		doc.append("username", "Pookie_Cookie");
-//		doc.append("password", "12345");
-//		coll.insert(doc);
 		MongoClient mongoClient = new MongoClient("localhost", 27017);
 		DB db = mongoClient.getDB("Music-transcription-DB");
 		DBCollection coll = db.getCollection("music");
