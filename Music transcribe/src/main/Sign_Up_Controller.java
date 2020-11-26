@@ -1,18 +1,12 @@
 package main;
 
 import java.io.IOException;
-
 import javax.swing.JOptionPane;
-
-import org.bson.Document;
-
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
-import com.mongodb.client.FindIterable;
-
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -49,29 +43,30 @@ public class Sign_Up_Controller {
 				System.out.println("found1");
 				JOptionPane.showMessageDialog(null, "Email already exists in system");
 			}
-			else if (!emailBox.getText().contains("@")) {
-				JOptionPane.showMessageDialog(null, "Please enter a valid email address");
-			}
-			else if (usernameBox.getText() == "" || passwordBox.getText() == "" || emailBox.getText() == "" || passConfirmBox.getText() == "" ) {
-				JOptionPane.showMessageDialog(null, "Please fill out all fields");
-			}
-			else if (!passwordBox.getText().equals(passConfirmBox.getText())){
-				JOptionPane.showMessageDialog(null, "The passwords do not match!");
-			}
-			else {
-				BasicDBObject doc = new BasicDBObject();
-				doc.append("username", usernameBox.getText());
-				doc.append("password", passConfirmBox.getText());
-				doc.append("email", emailBox.getText());
-				coll.insert(doc);
-				
-				Parent TranscribeParent = FXMLLoader.load(getClass().getResource("Transcribe_tab.fxml"));
-				Scene TranscribeScene = new Scene(TranscribeParent);
-				
-				Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
-				window.setScene(TranscribeScene);
-				window.show();
-			}
 		}
+		if (!emailBox.getText().contains("@")) {
+			JOptionPane.showMessageDialog(null, "Please enter a valid email address");
+		}
+		else if (usernameBox.getText() == "" || passwordBox.getText() == "" || emailBox.getText() == "" || passConfirmBox.getText() == "" ) {
+			JOptionPane.showMessageDialog(null, "Please fill out all fields");
+		}
+		else if (!passwordBox.getText().equals(passConfirmBox.getText())){
+			JOptionPane.showMessageDialog(null, "The passwords do not match!");
+		}
+		else {
+			BasicDBObject doc = new BasicDBObject();
+			doc.append("username", usernameBox.getText());
+			doc.append("password", passConfirmBox.getText());
+			doc.append("email", emailBox.getText());
+			coll.insert(doc);
+			
+			Parent TranscribeParent = FXMLLoader.load(getClass().getResource("Transcribe_tab.fxml"));
+			Scene TranscribeScene = new Scene(TranscribeParent);
+			
+			Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
+			window.setScene(TranscribeScene);
+			window.show();
+		}
+		
 	}
 }
