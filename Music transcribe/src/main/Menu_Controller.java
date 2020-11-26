@@ -18,21 +18,13 @@ import java.net.URISyntaxException;
 
 public class Menu_Controller implements Initializable {
 	
-	public void closeButtonOnAction(ActionEvent event) {
-		System.out.println("Hello");
-		Desktop d = Desktop.getDesktop();
-		try {
-			d.browse(new URL("https://www.youtube.com/watch?v=wpV-gGA4PSk").toURI());
-		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (URISyntaxException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	public void closeButtonOnAction(ActionEvent event) throws IOException {
+		Parent SignUpParent = FXMLLoader.load(getClass().getResource("Sign_Up.fxml"));
+		Scene SignUpScene = new Scene(SignUpParent);
+		
+		Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
+		window.setScene(SignUpScene);
+		window.show();
 	}
 	
 	public void logInButton(ActionEvent event) throws IOException {
@@ -50,3 +42,19 @@ public class Menu_Controller implements Initializable {
 		
 	}
 }
+
+
+//System.out.println("Hello");
+//Desktop d = Desktop.getDesktop();
+//try {
+//	d.browse(new URL("https://www.youtube.com/watch?v=wpV-gGA4PSk").toURI());
+//} catch (MalformedURLException e) {
+//	// TODO Auto-generated catch block
+//	e.printStackTrace();
+//} catch (IOException e) {
+//	// TODO Auto-generated catch block
+//	e.printStackTrace();
+//} catch (URISyntaxException e) {
+//	// TODO Auto-generated catch block
+//	e.printStackTrace();
+//}

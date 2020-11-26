@@ -23,10 +23,12 @@ import com.mongodb.DB;
 
 
 public class Main extends Application{
-
+	public static MongoClient mongo;
+	public static DBCollection mongocoll;
 	
 	@Override
 	public void start(Stage stage) throws Exception{
+		
 		Parent root = FXMLLoader.load(getClass().getResource("Menu.fxml"));
 		Scene scene = new Scene(root);
 		stage.setScene(scene);
@@ -35,19 +37,18 @@ public class Main extends Application{
 	
 	@SuppressWarnings("deprecation")
 	public static void main(String[] args) {
-		MongoClient mongoClient = new MongoClient("localhost", 27017);
-		DB db = mongoClient.getDB("Music-transcription-DB");
-		DBCollection coll = db.getCollection("music");
-		
 //		BasicDBObject doc = new BasicDBObject();
 //		doc.append("username", "Pookie_Cookie");
 //		doc.append("password", "12345");
 //		coll.insert(doc);
-		
-		System.out.println("Connection established");
+		MongoClient mongoClient = new MongoClient("localhost", 27017);
+		DB db = mongoClient.getDB("Music-transcription-DB");
+		DBCollection coll = db.getCollection("music");
+		mongo = mongoClient;
+		mongocoll = coll;
 		launch(args);
-		
 		mongoClient.close();
 	}
-
+	
+	
 }
