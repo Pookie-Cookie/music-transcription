@@ -8,15 +8,6 @@ import javafx.stage.Stage;
 
 import com.mongodb.DBCollection;
 import com.mongodb.MongoClient;
-import com.mongodb.DBCursor;
-
-import java.net.UnknownHostException;
-
-import org.bson.BsonObjectId;
-import org.bson.types.ObjectId;
-import org.bson.Document;
-
-import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 
 

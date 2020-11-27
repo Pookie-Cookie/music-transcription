@@ -1,6 +1,8 @@
 package main;
 
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
+
 import javax.swing.JOptionPane;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
@@ -29,8 +31,9 @@ public class Sign_Up_Controller {
 	@FXML
 	private TextField passConfirmBox;
 	
-	public void sign_up_button(ActionEvent event) throws IOException {
+	public void sign_up_button(ActionEvent event) throws IOException, NoSuchAlgorithmException {
 		DBCursor fi = coll.find();
+		String pass_hash = Helpers.SHA_Hash.toHexString(Helpers.SHA_Hash.getSHA(passwordBox.getText()));
 		while(fi.hasNext()) {
 			DBObject obj = fi.next();
 			String Username = (String) obj.get("username");
@@ -56,7 +59,7 @@ public class Sign_Up_Controller {
 		else {
 			BasicDBObject doc = new BasicDBObject();
 			doc.append("username", usernameBox.getText());
-			doc.append("password", passConfirmBox.getText());
+			doc.append("password", pass_hash);
 			doc.append("email", emailBox.getText());
 			coll.insert(doc);
 			

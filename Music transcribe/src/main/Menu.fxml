@@ -13,8 +13,8 @@
    <children>
       <AnchorPane layoutX="350.0" layoutY="37.0" prefHeight="318.0" prefWidth="309.0">
          <children>
-            <TextField id="us" layoutX="16.0" layoutY="103.0" prefHeight="26.0" prefWidth="287.0" promptText="Username" />
-            <TextField layoutX="16.0" layoutY="147.0" prefHeight="26.0" prefWidth="287.0" promptText="Password" />
+            <TextField id="us" fx:id="userEmailBox" layoutX="16.0" layoutY="103.0" prefHeight="26.0" prefWidth="287.0" promptText=" Username or Email" />
+            <TextField fx:id="passwordBox" layoutX="16.0" layoutY="147.0" prefHeight="26.0" prefWidth="287.0" promptText="Password" />
             <Button id="log in button" layoutX="141.0" layoutY="201.0" mnemonicParsing="false" onAction="#logInButton" text="Log in" />
             <Hyperlink layoutX="110.0" layoutY="255.0" onAction="#closeButtonOnAction" text="Forgot password?" />
             <Label focusTraversable="false" layoutX="141.0" layoutY="61.0" text="Welcome" />
