@@ -48,6 +48,7 @@ public class Menu_Controller implements Initializable {
 	public void logInButton(ActionEvent event) throws IOException, NoSuchAlgorithmException {
 		DBCursor fi = coll.find();
 		String pass_hash = Helpers.SHA_Hash.toHexString(Helpers.SHA_Hash.getSHA(passwordBox.getText()));
+		boolean found = false;
 		while(fi.hasNext()) {
 			DBObject obj = fi.next();
 			String Username = (String) obj.get("username");
@@ -55,6 +56,7 @@ public class Menu_Controller implements Initializable {
 			String Password = (String) obj.get("password");
 			if(userEmailBox.getText().equals(Username) || userEmailBox.getText().equals(email)) {
 				if(pass_hash.equals(Password)) {
+					found = true;
 					Parent TranscribeParent = FXMLLoader.load(getClass().getResource("Transcribe_tab.fxml"));
 					Scene TranscribeScene = new Scene(TranscribeParent);
 					
@@ -66,9 +68,9 @@ public class Menu_Controller implements Initializable {
 					JOptionPane.showMessageDialog(null, "incorrect username or password" );
 				}
 			}
-			else {
-				JOptionPane.showMessageDialog(null, "This username or email does not exist in our system" );
-			}
+		}
+		if(found == false) {
+			JOptionPane.showMessageDialog(null, "User does not exist" );
 		}
 	}
 
