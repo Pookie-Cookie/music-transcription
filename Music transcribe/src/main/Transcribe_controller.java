@@ -1,26 +1,23 @@
 package main;
 import java.awt.FileDialog;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.net.URI;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.URL;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.util.ResourceBundle;
-
+import java.net.URLConnection;
 import javax.swing.JFrame;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 
-public class Transcribe_controller implements Initializable{
+public class Transcribe_controller{
 	
 	public void logOutButton(ActionEvent event) throws IOException{
 		Parent MenuParent = FXMLLoader.load(getClass().getResource("Menu.fxml"));
@@ -50,16 +47,26 @@ public class Transcribe_controller implements Initializable{
 		    System.out.println(fd.getFiles()[0].getAbsolutePath());
 		}
 		String filePath = fd.getFiles()[0].getAbsolutePath();
-		HttpClient client = HttpClient.newHttpClient();
-		HttpRequest request = HttpRequest.newBuilder().GET().header("access_id", " 	ff2092da-30d6-4ab3-b2eb-a1bd423f60a9").uri(URI.create("https://api.sonicAPI.com/analyze/melody")).build();	
-		client.sendAsync(request, HttpResponse.BodyHandlers.ofString()).thenApply(HttpResponse::body).thenAccept(System.out::println).join();
-		
-	}
+        
+        String urlParameters = "access_id=ff2092da-30d6-4ab3-b2eb-a1bd423f60a9&input_file=http://www.sonicAPI.com/music/brown_eyes_by_ueberschall.mp3";
+        URL url = new URL("https://api.sonicAPI.com/analyze/melody");
+        URLConnection conn = url.openConnection();
 
-	@Override
-	public void initialize(URL arg0, ResourceBundle arg1) {
-		// TODO Auto-generated method stub
-		
+        conn.setDoOutput(true);
+
+        OutputStreamWriter writer = new OutputStreamWriter(conn.getOutputStream());
+
+        writer.write(urlParameters);
+        writer.flush();
+
+        String line;
+        BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+
+        while ((line = reader.readLine()) != null) {
+            System.out.println(line);
+        }
+        writer.close();
+        reader.close(); 
 	}
 
 }
