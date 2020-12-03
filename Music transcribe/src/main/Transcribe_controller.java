@@ -38,8 +38,9 @@ public class Transcribe_controller{
 		}
 	}
 	
+	
+	
 	public void uploadFile(ActionEvent event) throws IOException{
-		
 		FileDialog fd = new FileDialog(new JFrame());
 		fd.setVisible(true);
 		File[] f = fd.getFiles();
@@ -47,26 +48,42 @@ public class Transcribe_controller{
 		    System.out.println(fd.getFiles()[0].getAbsolutePath());
 		}
 		String filePath = fd.getFiles()[0].getAbsolutePath();
-        
-        String urlParameters = "access_id=ff2092da-30d6-4ab3-b2eb-a1bd423f60a9&input_file=http://www.sonicAPI.com/music/brown_eyes_by_ueberschall.mp3";
-        URL url = new URL("https://api.sonicAPI.com/analyze/melody");
-        URLConnection conn = url.openConnection();
-
-        conn.setDoOutput(true);
-
-        OutputStreamWriter writer = new OutputStreamWriter(conn.getOutputStream());
-
-        writer.write(urlParameters);
-        writer.flush();
-
-        String line;
-        BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-
-        while ((line = reader.readLine()) != null) {
-            System.out.println(line);
-        }
-        writer.close();
-        reader.close(); 
+		
+		File upload = new File(filePath);
+		
+		Thread newThread = new Thread(() -> {
+			try {
+				transcribe(upload);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		});
+		newThread.start();
 	}
+		
+		
 
+
+	public void transcribe(File upload) throws IOException{
+		String urlParameters = "access_id=ff2092da-30d6-4ab3-b2eb-a1bd423f60a9&input_file=http://www.sonicAPI.com/music/brown_eyes_by_ueberschall.mp3";
+	    URL url = new URL("https://api.sonicAPI.com/analyze/melody");
+	    URLConnection conn = url.openConnection();
+	
+	    conn.setDoOutput(true);
+	
+	    OutputStreamWriter writer = new OutputStreamWriter(conn.getOutputStream());
+	
+	    writer.write(urlParameters);
+	    writer.flush();
+	
+	    String line;
+	    BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+	
+	    while ((line = reader.readLine()) != null) {
+	        System.out.println(line);
+	    }
+	    writer.close();
+	    reader.close(); 
+	}
 }
