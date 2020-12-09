@@ -16,6 +16,9 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import java.io.FileWriter;
+import java.io.PrintWriter;
+
 
 public class Transcribe_controller{
 	
@@ -26,16 +29,6 @@ public class Transcribe_controller{
 		Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
 		window.setScene(MenuScene);
 		window.show();
-	}
-	
-	public void chooseFile(ActionEvent event) throws IOException{
-		FileDialog fd = new FileDialog(new JFrame());
-		fd.setVisible(true);
-		File[] f = fd.getFiles();
-		if(f.length > 0){
-		    System.out.println(fd.getFiles()[0].getAbsolutePath());
-		    String filePath = fd.getFiles()[0].getAbsolutePath();
-		}
 	}
 	
 	
@@ -53,7 +46,7 @@ public class Transcribe_controller{
 		
 		Thread newThread = new Thread(() -> {
 			try {
-				transcribe(upload);
+				transcribe(filePath);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -65,8 +58,9 @@ public class Transcribe_controller{
 		
 
 
-	public void transcribe(File upload) throws IOException{
+	public void transcribe(String filePath) throws IOException{
 		String urlParameters = "access_id=ff2092da-30d6-4ab3-b2eb-a1bd423f60a9&input_file=http://www.sonicAPI.com/music/brown_eyes_by_ueberschall.mp3";
+//		String urlParameters = "access_id=ff2092da-30d6-4ab3-b2eb-a1bd423f60a9&input_file="+filePath;
 	    URL url = new URL("https://api.sonicAPI.com/analyze/melody");
 	    URLConnection conn = url.openConnection();
 	
@@ -80,8 +74,11 @@ public class Transcribe_controller{
 	    String line;
 	    BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 	
+	    FileWriter myFile = new FileWriter("output.txt");
+	    
 	    while ((line = reader.readLine()) != null) {
 	        System.out.println(line);
+	        myFile.write(line + "\n");
 	    }
 	    writer.close();
 	    reader.close(); 
