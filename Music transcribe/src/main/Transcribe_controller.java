@@ -59,9 +59,10 @@ public class Transcribe_controller{
 
 
 	public void transcribe(String filePath) throws IOException{
-		String urlParameters = "access_id=ff2092da-30d6-4ab3-b2eb-a1bd423f60a9&input_file=http://www.sonicAPI.com/music/brown_eyes_by_ueberschall.mp3";
-//		String urlParameters = "access_id=ff2092da-30d6-4ab3-b2eb-a1bd423f60a9&input_file="+filePath;
-	    URL url = new URL("https://api.sonicAPI.com/analyze/melody");
+//		String urlParameters = "access_id=ff2092da-30d6-4ab3-b2eb-a1bd423f60a9&input_file=http://www.sonicAPI.com/music/brown_eyes_by_ueberschall.mp3";
+		String urlParameters = "access_id=ff2092da-30d6-4ab3-b2eb-a1bd423f60a9&input_file="+filePath;
+//	    URL url = new URL("https://api.sonicAPI.com/analyze/melody");
+	    URL url = new URL("https://api.sonicapi.com/file/upload?");
 	    URLConnection conn = url.openConnection();
 	
 	    conn.setDoOutput(true);
