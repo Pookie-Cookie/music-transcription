@@ -51,7 +51,7 @@ public class Sign_Up_Controller {
 					JOptionPane.showMessageDialog(null, "Email already exists in system");
 				}
 			}
-			if (!emailBox.getText().contains("@") || !emailBox.getText().contains("@")) {
+			if (!emailBox.getText().contains("@") || !emailBox.getText().contains(".")) {
 				JOptionPane.showMessageDialog(null, "Please enter a valid email address");
 			}
 			else if (usernameBox.getText() == "" || passwordBox.getText() == "" || emailBox.getText() == "" || passConfirmBox.getText() == "" ) {
