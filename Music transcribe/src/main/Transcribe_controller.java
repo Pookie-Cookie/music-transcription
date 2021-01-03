@@ -7,6 +7,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
+
 import javax.swing.JFrame;
 
 import javafx.event.ActionEvent;
@@ -71,9 +73,12 @@ public class Transcribe_controller{
 		System.out.println(root.getNodeName());
 		NodeList nList = document.getElementsByTagName("note");
 		
+		ArrayList<Integer> pitches = new ArrayList<Integer>();
 		for (int i = 0; i < nList.getLength(); i++) {
 			org.w3c.dom.Node node = nList.item(i);
 			Element element = (Element) node;
+			int potat = Integer.parseInt(element.getAttribute("midi_pitch"));
+			pitches.add(potat);
 			System.out.println(element.getAttribute("midi_pitch"));
 		}
 	}
