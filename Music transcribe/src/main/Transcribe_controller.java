@@ -16,6 +16,12 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import org.w3c.dom.*;
+import org.xml.sax.SAXException;
+
+import javax.xml.parsers.*;
+import java.io.*;
+
 import java.io.FileWriter;
 import java.io.PrintWriter;
 
@@ -47,7 +53,7 @@ public class Transcribe_controller{
 		Thread newThread = new Thread(() -> {
 			try {
 				transcribe(filePath);
-			} catch (IOException e) {
+			} catch (IOException | ParserConfigurationException | SAXException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
@@ -55,14 +61,28 @@ public class Transcribe_controller{
 		newThread.start();
 	}
 		
+
+	public void xmlReader(File xmlFile) throws ParserConfigurationException, SAXException, IOException {
+		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder builder = factory.newDocumentBuilder();
+		Document document = builder.parse(xmlFile);
+		document.getDocumentElement().normalize();
+		Element root = document.getDocumentElement();
+		System.out.println(root.getNodeName());
+		NodeList nList = document.getElementsByTagName("note");
 		
+		for (int i = 0; i < nList.getLength(); i++) {
+			org.w3c.dom.Node node = nList.item(i);
+			Element element = (Element) node;
+			System.out.println(element.getAttribute("midi_pitch"));
+		}
+	}
 
-
-	public void transcribe(String filePath) throws IOException{
-//		String urlParameters = "access_id=ff2092da-30d6-4ab3-b2eb-a1bd423f60a9&input_file=http://www.sonicAPI.com/music/brown_eyes_by_ueberschall.mp3";
-		String urlParameters = "access_id=ff2092da-30d6-4ab3-b2eb-a1bd423f60a9&input_file="+filePath;
-//	    URL url = new URL("https://api.sonicAPI.com/analyze/melody");
-	    URL url = new URL("https://api.sonicapi.com/file/upload?");
+	public void transcribe(String filePath) throws IOException, ParserConfigurationException, SAXException{
+		String urlParameters = "access_id=ff2092da-30d6-4ab3-b2eb-a1bd423f60a9&input_file=http://www.sonicAPI.com/music/brown_eyes_by_ueberschall.mp3";
+//		String urlParameters = "access_id=ff2092da-30d6-4ab3-b2eb-a1bd423f60a9&input_file="+filePath;
+	    URL url = new URL("https://api.sonicAPI.com/analyze/melody");
+//	    URL url = new URL("https://api.sonicapi.com/file/upload?");
 	    URLConnection conn = url.openConnection();
 	
 	    conn.setDoOutput(true);
@@ -74,14 +94,23 @@ public class Transcribe_controller{
 	
 	    String line;
 	    BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-	
-	    FileWriter myFile = new FileWriter("output.txt");
-	    
+	    FileWriter myFile = new FileWriter("output.xml");
 	    while ((line = reader.readLine()) != null) {
 	        System.out.println(line);
-	        myFile.write(line + "\n");
+	        if (!line.contains("response")) {
+	        	myFile.write(line+"\n");
+	        }
+	        else {
+	        	myFile.write(line);
+	        }
 	    }
+	    myFile.close();
 	    writer.close();
 	    reader.close(); 
+	    File myfile = new File("output.xml");
+	    xmlReader(myfile);
+	    
+	    
+	    
 	}
 }

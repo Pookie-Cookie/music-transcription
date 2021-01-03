@@ -33,7 +33,6 @@ public class Sign_Up_Controller {
 	
 	
 	
-	
 	public void sign_up_button(ActionEvent event) throws IOException, NoSuchAlgorithmException {
 		if(!usernameBox.getText().isBlank() && !emailBox.getText().isBlank() && !passwordBox.getText().isBlank() && !passConfirmBox.getText().isBlank()){
 			DBCursor fi = coll.find();
