@@ -68,7 +68,6 @@ public class Sign_Up_Controller {
 				
 				Parent TranscribeParent = FXMLLoader.load(getClass().getResource("Transcribe_tab.fxml"));
 				Scene TranscribeScene = new Scene(TranscribeParent);
-				
 				Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
 				window.setScene(TranscribeScene);
 				window.show();
