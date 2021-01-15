@@ -32,7 +32,7 @@ import java.io.PrintWriter;
 
 
 public class Transcribe_controller{
-	
+	public ArrayList<Integer> pitches = new ArrayList<Integer>();
 	public HashMap<Integer, String> pitchDict = new HashMap<Integer, String>();
 	public void addstuff() {
 		pitchDict.put(21, "a,,,");
@@ -126,22 +126,25 @@ public class Transcribe_controller{
 	}
 	
 
-	
-	try {
-		FileWriter NewFile = new FileWriter("autolytest.ly");
-		NewFile.write("version");
-		for (int i=0; i<20; i++) {
-			NewFile.write("potat");
+	public void lilypond_test() {
+		try {
+			FileWriter NewFile = new FileWriter("autolytest.ly");
+			NewFile.write("version");
+			NewFile.write("{");
+			for (int i=0; i<20; i++) {
+				NewFile.write(pitchDict.get(77));
+			}
+			NewFile.write("}");
+			NewFile.close();
 		}
-		NewFile.close();
-	}
-	catch(IOException e) {
-		System.out.println("An error occurred.");
-		e.printStackTrace();
+		catch(IOException e) {
+			System.out.println("An error occurred.");
+			e.printStackTrace();
+		}
 	}
 	
-	public ArrayList<Integer> pitches = new ArrayList<Integer>();
 	
+	 
 	public void logOutButton(ActionEvent event) throws IOException{
 		Parent MenuParent = FXMLLoader.load(getClass().getResource("Menu.fxml"));
 		Scene MenuScene = new Scene(MenuParent);
@@ -154,6 +157,8 @@ public class Transcribe_controller{
 	
 	
 	public void uploadFile(ActionEvent event) throws IOException{
+		addstuff();
+		lilypond_test();
 		FileDialog fd = new FileDialog(new JFrame());
 		fd.setVisible(true);
 		File[] f = fd.getFiles();
@@ -195,8 +200,8 @@ public class Transcribe_controller{
 	}
 
 	public void transcribe(String filePath) throws IOException, ParserConfigurationException, SAXException{
-		String urlParameters = "access_id=&input_file=http://www.sonicAPI.com/music/brown_eyes_by_ueberschall.mp3";
-//		String urlParameters = "access_id=&input_file="+filePath;
+		String urlParameters = "access_id=ff2092da-30d6-4ab3-b2eb-a1bd423f60a9&input_file=http://www.sonicAPI.com/music/brown_eyes_by_ueberschall.mp3";
+//		String urlParameters = "access_id=ff2092da-30d6-4ab3-b2eb-a1bd423f60a9&input_file="+filePath;
 	    URL url = new URL("https://api.sonicAPI.com/analyze/melody");
 //	    URL url = new URL("https://api.sonicapi.com/file/upload?");
 	    URLConnection conn = url.openConnection();
@@ -225,8 +230,5 @@ public class Transcribe_controller{
 	    reader.close(); 
 	    File myfile = new File("output.xml");
 	    xmlReader(myfile);
-	    
-	    
-	    
 	}
 }
