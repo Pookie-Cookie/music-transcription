@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.Map;
-
+import java.lang.Math;
 import javax.swing.JFrame;
 
 import javafx.event.ActionEvent;
@@ -193,14 +193,14 @@ public class Transcribe_controller{
 		for (int i = 0; i < nList.getLength(); i++) {
 			org.w3c.dom.Node node = nList.item(i);
 			Element element = (Element) node;
-			int potat = Integer.parseInt(element.getAttribute("midi_pitch"));
-			pitches.add(potat);
+			float potat = Float.parseFloat(element.getAttribute("midi_pitch"));
+			pitches.add(Math.round(potat));
 			System.out.println(element.getAttribute("midi_pitch"));
 		}
 	}
 
 	public void transcribe(String filePath) throws IOException, ParserConfigurationException, SAXException{
-		String urlParameters = "access_id=ff2092da-30d6-4ab3-b2eb-a1bd423f60a9&input_file=http://www.sonicAPI.com/music/brown_eyes_by_ueberschall.mp3";
+		String urlParameters = "access_id=584ee88b-4525-4f14-b2ea-94dedda17a30&input_file=http://www.sonicAPI.com/music/brown_eyes_by_ueberschall.mp3";
 //		String urlParameters = "access_id=ff2092da-30d6-4ab3-b2eb-a1bd423f60a9&input_file="+filePath;
 	    URL url = new URL("https://api.sonicAPI.com/analyze/melody");
 //	    URL url = new URL("https://api.sonicapi.com/file/upload?");
@@ -230,5 +230,30 @@ public class Transcribe_controller{
 	    reader.close(); 
 	    File myfile = new File("output.xml");
 	    xmlReader(myfile);
+	    
+	    try {
+			FileWriter NewFile = new FileWriter(".ly");
+			NewFile.write("\\version \"2.20.0\"{ \n");
+			double average = 0;
+			for (int i=0; i<pitches.size(); i++) {
+				average = average+pitches.get(i);
+			}
+			
+			if (average/pitches.size() < 47) {
+				NewFile.write("\\clef bass \n");
+			}
+			else {
+				NewFile.write("\\clef treble \n");
+			}
+			for (int i=0; i<pitches.size(); i++) {
+				NewFile.write(pitchDict.get(pitches.get(i)) + " ");
+			}
+			NewFile.write("\n}");
+			NewFile.close();
+		}
+		catch(IOException e) {
+			System.out.println("An error occurred.");
+			e.printStackTrace();
+		}
 	}
 }
