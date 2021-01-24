@@ -1,16 +1,17 @@
 package main;
 import java.awt.FileDialog;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.URLEncoder;
+import java.net.http.HttpClient;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.StringJoiner;
+import java.util.UUID;
 import java.lang.Math;
 import javax.swing.JFrame;
 
@@ -26,15 +27,52 @@ import org.xml.sax.SAXException;
 
 import javax.xml.parsers.*;
 import java.io.*;
-
-import java.io.FileWriter;
-import java.io.PrintWriter;
+import org.apache.hc.*;
+import org.apache.hc.client5.http.classic.methods.HttpPost;
+import org.apache.hc.client5.http.entity.mime.MultipartEntityBuilder;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
+import org.apache.hc.client5.http.impl.classic.HttpClients;
+import org.apache.hc.core5.http.ContentType;
+import org.apache.hc.core5.http.HttpEntity;
+import org.apache.hc.core5.http.HttpResponse;
+import org.apache.hc.core5.http.ParseException;
+import org.apache.hc.core5.http.io.entity.EntityUtils;
 
 
 public class Transcribe_controller{
 	public ArrayList<Integer> pitches = new ArrayList<Integer>();
 	public HashMap<Integer, String> pitchDict = new HashMap<Integer, String>();
-	public void addstuff() {
+	public HashMap<String, String> keyDict = new HashMap<>();
+	
+	public void addKey() {
+		keyDict.put("c maj", "c \\major");
+		keyDict.put("c min", "c \\minor");
+		keyDict.put("c# maj", "cis \\major");
+		keyDict.put("c# min", "cis \\minor");
+		keyDict.put("d maj", "d \\major");
+		keyDict.put("d min", "d \\minor");
+		keyDict.put("d# maj", "dis \\major");
+		keyDict.put("d# min", "dis \\minor");
+		keyDict.put("e maj", "e \\major");
+		keyDict.put("e min", "e \\minor");
+		keyDict.put("f maj", "f \\major");
+		keyDict.put("f min", "f \\minor");
+		keyDict.put("f# maj", "fis \\major");
+		keyDict.put("f# min", "fis \\minor");
+		keyDict.put("g maj", "g \\major");
+		keyDict.put("g min", "g \\minor");
+		keyDict.put("g# maj", "g# \\major");
+		keyDict.put("g# min", "g# \\minor");
+		keyDict.put("a maj", "a \\major");
+		keyDict.put("a min", "a \\minor");
+		keyDict.put("a# maj", "ais \\major");
+		keyDict.put("a# min", "ais \\minor");
+		keyDict.put("b major", "b \\major");
+		keyDict.put("b min", "b \\minor");
+	}
+	
+	public void addPitch() {
 		pitchDict.put(21, "a,,,");
 		pitchDict.put(22, "ais,,,");
 		pitchDict.put(23, "b,,,");
@@ -126,6 +164,24 @@ public class Transcribe_controller{
 	}
 	
 
+	private void sendFile(OutputStream out, String name, InputStream in, String fileName) throws IOException {
+	    String o = "Content-Disposition: form-data; name=\"" + URLEncoder.encode(name,"UTF-8") 
+	             + "\"; filename=\"" + URLEncoder.encode(fileName,"UTF-8") + "\"\r\n\r\n";
+	    out.write(o.getBytes(StandardCharsets.UTF_8));
+	    byte[] buffer = new byte[2048];
+	    for (int n = 0; n >= 0; n = in.read(buffer))
+	        out.write(buffer, 0, n);
+	    out.write("\r\n".getBytes(StandardCharsets.UTF_8));
+	}
+
+	private void sendField(OutputStream out, String name, String field) throws IOException {
+	    String o = "Content-Disposition: form-data; name=\"" 
+	             + URLEncoder.encode(name,"UTF-8") + "\"\r\n\r\n";
+	    out.write(o.getBytes(StandardCharsets.UTF_8));
+	    out.write(URLEncoder.encode(field,"UTF-8").getBytes(StandardCharsets.UTF_8));
+	    out.write("\r\n".getBytes(StandardCharsets.UTF_8));
+	}
+	
 	public void lilypond_test() {
 		try {
 			FileWriter NewFile = new FileWriter("autolytest.ly");
@@ -157,13 +213,16 @@ public class Transcribe_controller{
 	
 	
 	public void uploadFile(ActionEvent event) throws IOException{
-		addstuff();
+		addPitch();
 		lilypond_test();
 		FileDialog fd = new FileDialog(new JFrame());
 		fd.setVisible(true);
 		File[] f = fd.getFiles();
 		if(f.length > 0){
 		    System.out.println(fd.getFiles()[0].getAbsolutePath());
+		}
+		else {
+			return;
 		}
 		String filePath = fd.getFiles()[0].getAbsolutePath();
 		
@@ -172,7 +231,7 @@ public class Transcribe_controller{
 		Thread newThread = new Thread(() -> {
 			try {
 				transcribe(filePath);
-			} catch (IOException | ParserConfigurationException | SAXException e) {
+			} catch (IOException | ParserConfigurationException | SAXException | ParseException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
@@ -181,13 +240,13 @@ public class Transcribe_controller{
 	}
 		
 
-	public void xmlReader(File xmlFile) throws ParserConfigurationException, SAXException, IOException {
+	public String xmlReader(File xmlFile) throws ParserConfigurationException, SAXException, IOException {
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder builder = factory.newDocumentBuilder();
 		Document document = builder.parse(xmlFile);
 		document.getDocumentElement().normalize();
 		Element root = document.getDocumentElement();
-		System.out.println(root.getNodeName());
+//		System.out.println(root.getNodeName());
 		NodeList nList = document.getElementsByTagName("note");
 		
 		for (int i = 0; i < nList.getLength(); i++) {
@@ -195,56 +254,90 @@ public class Transcribe_controller{
 			Element element = (Element) node;
 			float potat = Float.parseFloat(element.getAttribute("midi_pitch"));
 			pitches.add(Math.round(potat));
-			System.out.println(element.getAttribute("midi_pitch"));
+//			System.out.println(element.getAttribute("midi_pitch"));
 		}
+		
+		NodeList nlist = document.getElementsByTagName("melody_result");
+		org.w3c.dom.Node Node = nlist.item(0);
+		Element element = (Element) Node;
+//		System.out.println(element.getAttribute("key"));
+		return(element.getAttribute("key"));
 	}
 
-	public void transcribe(String filePath) throws IOException, ParserConfigurationException, SAXException{
-		String urlParameters = "access_id=584ee88b-4525-4f14-b2ea-94dedda17a30&input_file=http://www.sonicAPI.com/music/brown_eyes_by_ueberschall.mp3";
+	public void transcribe(String filePath) throws IOException, ParserConfigurationException, SAXException, ParseException{
+//		String urlParameters = "access_id=ff2092da-30d6-4ab3-b2eb-a1bd423f60a9&input_file=D:\\Java code\\music-transcription\\Music transcribe\\src\\main\\Bruh Sound Effect 2.mp3";
 //		String urlParameters = "access_id=ff2092da-30d6-4ab3-b2eb-a1bd423f60a9&input_file="+filePath;
-	    URL url = new URL("https://api.sonicAPI.com/analyze/melody");
-//	    URL url = new URL("https://api.sonicapi.com/file/upload?");
-	    URLConnection conn = url.openConnection();
+	    URL url = new URL("https://api.sonicAPI.com/analyze/melody?");
+	    
+	    
+	    CloseableHttpClient httpClient = HttpClients.createDefault();
+	    HttpPost uploadFile = new HttpPost("https://api.sonicAPI.com/analyze/melody?");
+	    MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+	    builder.addTextBody("access_id", "ff2092da-30d6-4ab3-b2eb-a1bd423f60a9", ContentType.TEXT_PLAIN);
+
+	    // This attaches the file to the POST:
+	    File f = new File(filePath);
+	    builder.addBinaryBody(
+	        "input_file",
+	        new FileInputStream(f),
+	        ContentType.APPLICATION_OCTET_STREAM,
+	        f.getName()
+	    );
+
+	    HttpEntity multipart = builder.build();
+	    uploadFile.setEntity(multipart);
+	    CloseableHttpResponse response = httpClient.execute(uploadFile);
+	    HttpEntity responseEntity = response.getEntity();
+	    
+	    String result = EntityUtils.toString(responseEntity);
+	    System.out.println(result);
+	    
+//	    DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+//        DocumentBuilder db = dbf.newDocumentBuilder();
+//        if (responseEntity != null) {
+//            InputStream inputStream = responseEntity.getContent();
+//            Document doc = db.parse(inputStream);
+//            doc.getDocumentElement().normalize(); 
+//        System.out.println(doc);
+	    
 	
-	    conn.setDoOutput(true);
-	
-	    OutputStreamWriter writer = new OutputStreamWriter(conn.getOutputStream());
-	
-	    writer.write(urlParameters);
-	    writer.flush();
-	
-	    String line;
-	    BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+//	    String line;
+//	    BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 	    FileWriter myFile = new FileWriter("output.xml");
-	    while ((line = reader.readLine()) != null) {
-	        System.out.println(line);
-	        if (!line.contains("response")) {
-	        	myFile.write(line+"\n");
-	        }
-	        else {
-	        	myFile.write(line);
-	        }
-	    }
+	    myFile.write(result);
+//	    while ((result = result.readLine()) != null) {
+//	        System.out.println(line);
+//	        if (!line.contains("response")) {
+//	        	myFile.write(line+"\n");
+//	        }
+//	        else {
+//	        	myFile.write(line);
+//	        }
+//	    }
 	    myFile.close();
-	    writer.close();
-	    reader.close(); 
+//	    reader.close();
+		
 	    File myfile = new File("output.xml");
-	    xmlReader(myfile);
+	    String key = xmlReader(myfile);
 	    
 	    try {
 			FileWriter NewFile = new FileWriter(".ly");
 			NewFile.write("\\version \"2.20.0\"{ \n");
 			double average = 0;
-			for (int i=0; i<pitches.size(); i++) {
+			//get average pitch
+			for (int i=1; i<pitches.size(); i++) {
 				average = average+pitches.get(i);
 			}
-			
+			//write with the correct clef
 			if (average/pitches.size() < 47) {
 				NewFile.write("\\clef bass \n");
 			}
 			else {
 				NewFile.write("\\clef treble \n");
 			}
+			//write key signature
+			NewFile.write("\\key"+keyDict.get(key)+"\n");
+			//write the rest of the notes
 			for (int i=0; i<pitches.size(); i++) {
 				NewFile.write(pitchDict.get(pitches.get(i)) + " ");
 			}
@@ -257,3 +350,4 @@ public class Transcribe_controller{
 		}
 	}
 }
+
