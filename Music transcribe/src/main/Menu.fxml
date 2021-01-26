@@ -7,33 +7,39 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.Menu_Controller">
-   <children>
-      <AnchorPane layoutX="350.0" layoutY="37.0" prefHeight="318.0" prefWidth="309.0">
+<BorderPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.Menu_Controller">
+   <center>
+      <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="700.0">
          <children>
-            <TextField id="us" fx:id="userEmailBox" layoutX="16.0" layoutY="103.0" prefHeight="26.0" prefWidth="287.0" promptText=" Username or Email" />
-            <TextField fx:id="passwordBox" layoutX="16.0" layoutY="147.0" prefHeight="26.0" prefWidth="287.0" promptText="Password" />
-            <Button id="log in button" layoutX="141.0" layoutY="201.0" mnemonicParsing="false" onAction="#logInButton" text="Log in" />
-            <Hyperlink layoutX="110.0" layoutY="255.0" onAction="#closeButtonOnAction" text="Forgot password?" />
-            <Label focusTraversable="false" layoutX="141.0" layoutY="61.0" text="Welcome" />
+            <AnchorPane layoutX="350.0" layoutY="41.0" prefHeight="318.0" prefWidth="309.0">
+               <children>
+                  <TextField id="us" fx:id="userEmailBox" layoutX="16.0" layoutY="103.0" prefHeight="26.0" prefWidth="287.0" promptText=" Username or Email" />
+                  <TextField fx:id="passwordBox" layoutX="16.0" layoutY="147.0" prefHeight="26.0" prefWidth="287.0" promptText="Password" />
+                  <Button id="log in button" layoutX="141.0" layoutY="201.0" mnemonicParsing="false" onAction="#logInButton" text="Log in" />
+                  <Hyperlink layoutX="110.0" layoutY="255.0" text="Forgot password?" />
+                  <Label focusTraversable="false" layoutX="141.0" layoutY="61.0" text="Welcome" />
+               </children>
+            </AnchorPane>
+            <ImageView fitHeight="162.0" fitWidth="334.0" layoutX="25.0" layoutY="119.0" opacity="0.3" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../Images/index.jpg" />
+               </image>
+            </ImageView>
+            <Label layoutX="112.0" layoutY="67.0" text="MUSIO" textAlignment="CENTER">
+               <font>
+                  <Font name="Bodoni MT Black" size="43.0" />
+               </font>
+            </Label>
+            <Button layoutX="107.0" layoutY="276.0" mnemonicParsing="false" onAction="#signUpButton" prefHeight="52.0" prefWidth="160.0" text="Sign up!">
+               <font>
+                  <Font name="AmdtSymbols" size="21.0" />
+               </font>
+            </Button>
+            <Button layoutX="14.0" layoutY="359.0" mnemonicParsing="false" onAction="#quitButton" text="Quit" />
          </children>
       </AnchorPane>
-      <ImageView fitHeight="162.0" fitWidth="334.0" layoutX="25.0" layoutY="119.0" opacity="0.3" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../Images/index.jpg" />
-         </image>
-      </ImageView>
-      <Label layoutX="112.0" layoutY="67.0" text="MUSIO" textAlignment="CENTER">
-         <font>
-            <Font name="Bodoni MT Black" size="43.0" />
-         </font>
-      </Label>
-      <Button layoutX="107.0" layoutY="276.0" mnemonicParsing="false" onAction="#closeButtonOnAction" prefHeight="52.0" prefWidth="160.0" text="Sign up!">
-         <font>
-            <Font name="AmdtSymbols" size="21.0" />
-         </font>
-      </Button>
-   </children>
-</AnchorPane>
+   </center>
+</BorderPane>

@@ -19,7 +19,9 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 import java.awt.Desktop;
 import java.net.MalformedURLException;
@@ -36,13 +38,20 @@ public class Menu_Controller implements Initializable {
 	@FXML
 	private TextField passwordBox;
 	
-	public void closeButtonOnAction(ActionEvent event) throws IOException {
+	
+	public void signUpButton(ActionEvent event) throws IOException {
 		Parent SignUpParent = FXMLLoader.load(getClass().getResource("Sign_Up.fxml"));
 		Scene SignUpScene = new Scene(SignUpParent);
 		
 		Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
 		window.setScene(SignUpScene);
 		window.show();
+		window.initStyle(StageStyle.DECORATED);
+	}
+	
+	public void quitButton(ActionEvent event) throws IOException {	
+		Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
+		window.close();
 	}
 	
 	public void logInButton(ActionEvent event) throws IOException, NoSuchAlgorithmException {
@@ -61,8 +70,11 @@ public class Menu_Controller implements Initializable {
 					Scene TranscribeScene = new Scene(TranscribeParent);
 					
 					Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
-					window.setScene(TranscribeScene);
-					window.show();
+					window.close();
+					Stage newWindow = new Stage();
+					newWindow.setScene(TranscribeScene);
+					newWindow.getIcons().add(new Image("Images/icon.png"));
+					newWindow.show();
 				}
 				else {
 					JOptionPane.showMessageDialog(null, "incorrect username or password" );

@@ -31,7 +31,10 @@ public class Sign_Up_Controller {
 	@FXML
 	private TextField passConfirmBox;
 	
-	
+	public void quitButton(ActionEvent event) throws IOException {	
+		Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
+		window.close();
+	}
 	
 	public void sign_up_button(ActionEvent event) throws IOException, NoSuchAlgorithmException {
 		if(!usernameBox.getText().isBlank() && !emailBox.getText().isBlank() && !passwordBox.getText().isBlank() && !passConfirmBox.getText().isBlank()){

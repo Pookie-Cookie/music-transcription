@@ -7,12 +7,13 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.Sign_Up_Controller">
    <children>
+      <TextField id="Email_box" fx:id="emailBox" layoutX="226.0" layoutY="112.0" promptText="Email" />
       <TextField id="username" fx:id="usernameBox" layoutX="226.0" layoutY="149.0" promptText="Username" />
       <TextField id="Password_box" fx:id="passwordBox" layoutX="226.0" layoutY="188.0" promptText="Password" />
+      <TextField id="Confirm_password_box" fx:id="passConfirmBox" layoutX="226.0" layoutY="225.0" promptText="Confirm password" />
       <Button layoutX="226.0" layoutY="267.0" mnemonicParsing="false" onAction="#sign_up_button" text="Sign up" />
       <Label layoutX="245.0" layoutY="73.0" text="Welcome to my app!" />
-      <TextField id="Confirm_password_box" fx:id="passConfirmBox" layoutX="226.0" layoutY="225.0" promptText="Confirm password" />
       <Button layoutX="323.0" layoutY="267.0" mnemonicParsing="false" text="Log in" />
-      <TextField id="Email_box" fx:id="emailBox" layoutX="226.0" layoutY="112.0" promptText="Email" />
+      <Button layoutX="14.0" layoutY="361.0" mnemonicParsing="false" onAction="#quitButton" text="Quit" />
    </children>
 </AnchorPane>
