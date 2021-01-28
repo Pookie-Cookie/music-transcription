@@ -16,6 +16,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 public class Sign_Up_Controller {
@@ -34,6 +35,14 @@ public class Sign_Up_Controller {
 	public void quitButton(ActionEvent event) throws IOException {	
 		Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
 		window.close();
+	}
+	
+	public void logInButton(ActionEvent event) throws IOException{
+		Parent TranscribeParent = FXMLLoader.load(getClass().getResource("Menu.fxml"));
+		Scene TranscribeScene = new Scene(TranscribeParent);
+		Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
+		window.setScene(TranscribeScene);
+		window.show();
 	}
 	
 	public void sign_up_button(ActionEvent event) throws IOException, NoSuchAlgorithmException {
@@ -71,9 +80,13 @@ public class Sign_Up_Controller {
 				
 				Parent TranscribeParent = FXMLLoader.load(getClass().getResource("Transcribe_tab.fxml"));
 				Scene TranscribeScene = new Scene(TranscribeParent);
+				
 				Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
-				window.setScene(TranscribeScene);
-				window.show();
+				window.close();
+				Stage newWindow = new Stage();
+				newWindow.setScene(TranscribeScene);
+				newWindow.getIcons().add(new Image("Images/icon.png"));
+				newWindow.show();
 			}
 		}
 		else {

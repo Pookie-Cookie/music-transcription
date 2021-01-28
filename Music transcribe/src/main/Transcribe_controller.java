@@ -1,5 +1,6 @@
 package main;
 
+import java.awt.Desktop;
 import java.awt.FileDialog;
 //import java.net.URL;
 import java.util.ArrayList;
@@ -247,7 +248,8 @@ public class Transcribe_controller{
 	    HttpPost uploadFile = new HttpPost("https://api.sonicAPI.com/analyze/melody?");
 	    MultipartEntityBuilder builder = MultipartEntityBuilder.create();
 	    builder.addTextBody("access_id", "ff2092da-30d6-4ab3-b2eb-a1bd423f60a9", ContentType.TEXT_PLAIN);
-
+	    
+	    
 	    // This attaches the file to the POST:
 	    File f = new File(filePath);
 	    builder.addBinaryBody(
@@ -256,6 +258,8 @@ public class Transcribe_controller{
 	        ContentType.APPLICATION_OCTET_STREAM,
 	        f.getName()
 	    );
+	    
+	    String fileName = f.getName();
 	    
 	    builder.addTextBody("begin_seconds", beginTime.getText());
 	    builder.addTextBody("end_seconds", endTime.getText());
@@ -279,6 +283,7 @@ public class Transcribe_controller{
 		    
 		    try {
 				FileWriter NewFile = new FileWriter(".ly");
+				NewFile.write("\\header { \ntitle = \""+fileName+"\" \n} \n");
 				NewFile.write("\\version \"2.20.0\"{ \n");
 				double average = 0;
 				//get average pitch
@@ -305,6 +310,15 @@ public class Transcribe_controller{
 				System.out.println("An error occurred.");
 				e.printStackTrace();
 			}
+		    Runtime.getRuntime().exec("/.ly");
+		    
+		    try {
+		    	File File = new File("../Music transcribe.pdf");
+		    	Desktop.getDesktop().open(File);
+		    }
+		    catch (IOException ex){
+		    	
+		    }
 	    }
 	    else if (code == 400) {
 	    	JOptionPane.showMessageDialog(null, "The file chosen does not appear to be a valid file, please choose a mp3 or WAV file." );

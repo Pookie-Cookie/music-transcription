@@ -46,7 +46,7 @@ public class Menu_Controller implements Initializable {
 		Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
 		window.setScene(SignUpScene);
 		window.show();
-		window.initStyle(StageStyle.DECORATED);
+//		window.initStyle(StageStyle.DECORATED);
 	}
 	
 	public void quitButton(ActionEvent event) throws IOException {	
