@@ -16,7 +16,9 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 import org.w3c.dom.*;
 import org.xml.sax.SAXException;
@@ -189,8 +191,12 @@ public class Transcribe_controller{
 		Scene MenuScene = new Scene(MenuParent);
 		
 		Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
-		window.setScene(MenuScene);
-		window.show();
+		window.close();
+		Stage stage = new Stage();
+		stage.initStyle(StageStyle.UNDECORATED);
+		stage.getIcons().add(new Image("Images/icon.png"));
+		stage.setScene(MenuScene);
+		stage.show();
 	}
 	
 	
@@ -310,14 +316,23 @@ public class Transcribe_controller{
 				System.out.println("An error occurred.");
 				e.printStackTrace();
 			}
-		    Runtime.getRuntime().exec("/.ly");
 		    
 		    try {
-		    	File File = new File("../Music transcribe.pdf");
+		    	String[] params = new String[2];
+		    	params[0] = "LilyPond\\usr\\bin\\lilypond.exe";
+		    	params[1] = ".ly";
+		    	Runtime.getRuntime().exec(params);
+		    }
+		    catch (IOException ex) {
+		    	ex.printStackTrace();
+		    }
+		    
+		    try {
+		    	File File = new File(".pdf");
 		    	Desktop.getDesktop().open(File);
 		    }
 		    catch (IOException ex){
-		    	
+		    	ex.printStackTrace();
 		    }
 	    }
 	    else if (code == 400) {

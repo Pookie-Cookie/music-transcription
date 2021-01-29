@@ -18,6 +18,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
@@ -36,7 +37,7 @@ public class Menu_Controller implements Initializable {
 	@FXML
 	private TextField userEmailBox;
 	@FXML
-	private TextField passwordBox;
+	private PasswordField passwordBox;
 	
 	
 	public void signUpButton(ActionEvent event) throws IOException {

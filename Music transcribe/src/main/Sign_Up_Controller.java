@@ -15,6 +15,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
@@ -28,9 +29,9 @@ public class Sign_Up_Controller {
 	@FXML 
 	private TextField emailBox;
 	@FXML
-	private TextField passwordBox;
+	private PasswordField passwordBox;
 	@FXML
-	private TextField passConfirmBox;
+	private PasswordField passConfirmBox;
 	
 	public void quitButton(ActionEvent event) throws IOException {	
 		Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
