@@ -25,20 +25,20 @@ import org.xml.sax.SAXException;
 
 import javax.xml.parsers.*;
 import java.io.*;
-import org.apache.hc.client5.http.classic.methods.HttpPost;
-import org.apache.hc.client5.http.entity.mime.MultipartEntityBuilder;
-import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
-import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
-import org.apache.hc.client5.http.impl.classic.HttpClients;
-import org.apache.hc.core5.http.ContentType;
-import org.apache.hc.core5.http.HttpEntity;
-import org.apache.hc.core5.http.ParseException;
-import org.apache.hc.core5.http.io.entity.EntityUtils;
+import org.apache.http.HttpEntity;
+import org.apache.http.ParseException;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 
 public class Transcribe_controller{
 	public ArrayList<Integer> pitches = new ArrayList<Integer>();
 	public HashMap<Integer, String> pitchDict = new HashMap<Integer, String>();
-	public HashMap<String, String> keyDict = new HashMap<>();
+	public HashMap<String, String> keyDict = new HashMap<String, String>();
 	
 	@FXML
 	private TextField beginTime;
@@ -274,7 +274,7 @@ public class Transcribe_controller{
 	    uploadFile.setEntity(multipart);
 	    CloseableHttpResponse response = httpClient.execute(uploadFile);
 	    HttpEntity responseEntity = response.getEntity();
-	    int code = response.getCode();
+	    int code = response.getStatusLine().getStatusCode();
 	    
 	    if (code >= 200 && code <= 299) {
 	    	String result = EntityUtils.toString(responseEntity);
