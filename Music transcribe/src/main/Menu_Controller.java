@@ -6,6 +6,7 @@ import java.util.ResourceBundle;
 
 import javax.swing.JOptionPane;
 
+import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
@@ -50,7 +51,9 @@ public class Menu_Controller implements Initializable {
 	}
 	
 	public void logInButton(ActionEvent event) throws IOException, NoSuchAlgorithmException {
-		DBCursor fi = coll.find();
+		BasicDBObject searchQuery = new BasicDBObject();
+		searchQuery.put("username", userEmailBox.getText());
+		DBCursor fi = coll.find(searchQuery);
 		String pass_hash = Helpers.SHA_Hash.toHexString(Helpers.SHA_Hash.getSHA(passwordBox.getText()));
 		boolean found = false;
 		while(fi.hasNext()) {
