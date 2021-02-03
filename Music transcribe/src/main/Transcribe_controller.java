@@ -10,6 +10,7 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import java.io.File;
 import javafx.scene.media.*;
+import javafx.scene.text.TextAlignment;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -215,6 +216,7 @@ public class Transcribe_controller{
 		String filePath = fd.getFiles()[0].getAbsolutePath();
 		
 		file = filePath;
+		fileLabel.setTextAlignment(TextAlignment.CENTER);
 		fileLabel.setText(f[0].getName());
 	}
 		

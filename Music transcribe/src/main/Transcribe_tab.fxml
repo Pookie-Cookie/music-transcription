@@ -23,7 +23,7 @@
             <Button layoutX="272.0" layoutY="362.0" mnemonicParsing="false" onAction="#logOutButton" text="Log out" />
             <Button layoutX="270.0" layoutY="284.0" mnemonicParsing="false" onAction="#previewButton" text="Preview" />
             <Button layoutX="254.0" layoutY="57.0" mnemonicParsing="false" onAction="#uploadFile" text="Choose a file!" />
-            <Label fx:id="fileLabel" layoutX="299.0" layoutY="200.0" textAlignment="CENTER" />
+            <Label fx:id="fileLabel" layoutX="198.0" layoutY="200.0" maxHeight="-Infinity" maxWidth="600.0" minHeight="-Infinity" minWidth="20.0" prefWidth="200.0" textAlignment="CENTER" />
          </children>
       </AnchorPane>
    </center>
