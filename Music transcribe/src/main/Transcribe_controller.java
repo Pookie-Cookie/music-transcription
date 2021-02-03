@@ -54,29 +54,29 @@ public class Transcribe_controller{
 	
 	public void addKey() {
 		keyDict.put("C Maj", "c \\major");
-		keyDict.put("c min", "c \\minor");
-		keyDict.put("c# maj", "cis \\major");
-		keyDict.put("c# min", "cis \\minor");
-		keyDict.put("d maj", "d \\major");
-		keyDict.put("d min", "d \\minor");
-		keyDict.put("d# maj", "dis \\major");
-		keyDict.put("d# min", "dis \\minor");
-		keyDict.put("e maj", "e \\major");
-		keyDict.put("e min", "e \\minor");
-		keyDict.put("f maj", "f \\major");
-		keyDict.put("f min", "f \\minor");
-		keyDict.put("f# maj", "fis \\major");
-		keyDict.put("f# min", "fis \\minor");
-		keyDict.put("g maj", "g \\major");
-		keyDict.put("g min", "g \\minor");
-		keyDict.put("g# maj", "g# \\major");
-		keyDict.put("g# min", "g# \\minor");
-		keyDict.put("a maj", "a \\major");
-		keyDict.put("a min", "a \\minor");
+		keyDict.put("C Min", "c \\minor");
+		keyDict.put("C# Maj", "cis \\major");
+		keyDict.put("C# Min", "cis \\minor");
+		keyDict.put("D Maj", "d \\major");
+		keyDict.put("D Min", "d \\minor");
+		keyDict.put("D# Maj", "dis \\major");
+		keyDict.put("D# Min", "dis \\minor");
+		keyDict.put("E Maj", "e \\major");
+		keyDict.put("E Min", "e \\minor");
+		keyDict.put("F Maj", "f \\major");
+		keyDict.put("F Min", "f \\minor");
+		keyDict.put("F# Maj", "fis \\major");
+		keyDict.put("F# Min", "fis \\minor");
+		keyDict.put("G Maj", "g \\major");
+		keyDict.put("G Min", "g \\minor");
+		keyDict.put("G# Maj", "g# \\major");
+		keyDict.put("G# Min", "g# \\minor");
+		keyDict.put("A Maj", "a \\major");
+		keyDict.put("A Min", "a \\minor");
 		keyDict.put("A# Maj", "ais \\major");
-		keyDict.put("a# min", "ais \\minor");
-		keyDict.put("b major", "b \\major");
-		keyDict.put("b min", "b \\minor");
+		keyDict.put("A# Min", "ais \\minor");
+		keyDict.put("B Major", "b \\major");
+		keyDict.put("B Min", "b \\minor");
 	}
 	
 	public void addPitch() {
@@ -202,6 +202,7 @@ public class Transcribe_controller{
 	
 	public void uploadFile(ActionEvent event) throws IOException{
 		addPitch();
+		addKey();
 		FileDialog fd = new FileDialog(new JFrame());
 		fd.setVisible(true);
 		File[] f = fd.getFiles();
@@ -214,16 +215,7 @@ public class Transcribe_controller{
 		String filePath = fd.getFiles()[0].getAbsolutePath();
 		
 		file = filePath;
-		fileLabel.setText(filePath);
-//		Thread newThread = new Thread(() -> {
-//			try {
-//				transcribe(filePath);
-//			} catch (IOException | ParserConfigurationException | SAXException | ParseException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-//		});
-//		newThread.start();
+		fileLabel.setText(f[0].getName());
 	}
 		
 	public String xmlReader(File xmlFile) throws ParserConfigurationException, SAXException, IOException {
@@ -281,8 +273,6 @@ public class Transcribe_controller{
 			    
 			    if (code >= 200 && code <= 299) {
 			    	String result = EntityUtils.toString(responseEntity);
-				    System.out.println(result);
-
 				    FileWriter myFile = new FileWriter("output.xml");
 				    myFile.write(result);
 				    File myfile = new File("output.xml");
@@ -307,8 +297,7 @@ public class Transcribe_controller{
 							NewFile.write("\\clef treble \n");
 						}
 						//write key signature
-						System.out.println(keyDict.get("A# Maj"));
-						NewFile.write("\\key "+"ais \\major"+"\n");
+						NewFile.write("\\key "+keyDict.get(key)+"\n");
 						//write the rest of the notes
 						for (int i=0; i<pitches.size(); i++) {
 							NewFile.write(pitchDict.get(pitches.get(i)) + " ");
