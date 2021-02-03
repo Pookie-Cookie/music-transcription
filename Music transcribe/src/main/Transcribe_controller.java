@@ -53,7 +53,7 @@ public class Transcribe_controller{
 	
 	
 	public void addKey() {
-		keyDict.put("c maj", "c \\major");
+		keyDict.put("C Maj", "c \\major");
 		keyDict.put("c min", "c \\minor");
 		keyDict.put("c# maj", "cis \\major");
 		keyDict.put("c# min", "cis \\minor");
@@ -73,7 +73,7 @@ public class Transcribe_controller{
 		keyDict.put("g# min", "g# \\minor");
 		keyDict.put("a maj", "a \\major");
 		keyDict.put("a min", "a \\minor");
-		keyDict.put("a# maj", "ais \\major");
+		keyDict.put("A# Maj", "ais \\major");
 		keyDict.put("a# min", "ais \\minor");
 		keyDict.put("b major", "b \\major");
 		keyDict.put("b min", "b \\minor");
@@ -243,6 +243,7 @@ public class Transcribe_controller{
 		NodeList nlist = document.getElementsByTagName("melody_result");
 		org.w3c.dom.Node Node = nlist.item(0);
 		Element element = (Element) Node;
+		System.out.println(element.getAttribute("key"));
 		return(element.getAttribute("key"));
 	}
 
@@ -306,7 +307,8 @@ public class Transcribe_controller{
 							NewFile.write("\\clef treble \n");
 						}
 						//write key signature
-						NewFile.write("\\key"+keyDict.get(key)+"\n");
+						System.out.println(keyDict.get("A# Maj"));
+						NewFile.write("\\key "+"ais \\major"+"\n");
 						//write the rest of the notes
 						for (int i=0; i<pitches.size(); i++) {
 							NewFile.write(pitchDict.get(pitches.get(i)) + " ");
@@ -330,7 +332,7 @@ public class Transcribe_controller{
 				    }
 				    
 				    try {
-				    	File File = new File(".pdf");
+				    	File File = new File("..\\Music transcribe.pdf");
 				    	Desktop.getDesktop().open(File);
 				    }
 				    catch (IOException ex){
