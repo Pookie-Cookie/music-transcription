@@ -8,13 +8,16 @@ import java.util.HashMap;
 import java.lang.Math;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-
+import java.io.File;
+import javafx.scene.media.*;
+import javafx.scene.text.TextAlignment;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
@@ -25,21 +28,25 @@ import org.xml.sax.SAXException;
 
 import javax.xml.parsers.*;
 import java.io.*;
-import org.apache.hc.client5.http.classic.methods.HttpPost;
-import org.apache.hc.client5.http.entity.mime.MultipartEntityBuilder;
-import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
-import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
-import org.apache.hc.client5.http.impl.classic.HttpClients;
-import org.apache.hc.core5.http.ContentType;
-import org.apache.hc.core5.http.HttpEntity;
-import org.apache.hc.core5.http.ParseException;
-import org.apache.hc.core5.http.io.entity.EntityUtils;
+import org.apache.http.HttpEntity;
+import org.apache.http.ParseException;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 
 public class Transcribe_controller{
 	public ArrayList<Integer> pitches = new ArrayList<Integer>();
 	public HashMap<Integer, String> pitchDict = new HashMap<Integer, String>();
-	public HashMap<String, String> keyDict = new HashMap<>();
+	public HashMap<String, String> keyDict = new HashMap<String, String>();
+	private static MediaPlayer player;
+	private String file = null;
 	
+	@FXML
+	private Label fileLabel;
 	@FXML
 	private TextField beginTime;
 	@FXML
@@ -47,30 +54,30 @@ public class Transcribe_controller{
 	
 	
 	public void addKey() {
-		keyDict.put("c maj", "c \\major");
-		keyDict.put("c min", "c \\minor");
-		keyDict.put("c# maj", "cis \\major");
-		keyDict.put("c# min", "cis \\minor");
-		keyDict.put("d maj", "d \\major");
-		keyDict.put("d min", "d \\minor");
-		keyDict.put("d# maj", "dis \\major");
-		keyDict.put("d# min", "dis \\minor");
-		keyDict.put("e maj", "e \\major");
-		keyDict.put("e min", "e \\minor");
-		keyDict.put("f maj", "f \\major");
-		keyDict.put("f min", "f \\minor");
-		keyDict.put("f# maj", "fis \\major");
-		keyDict.put("f# min", "fis \\minor");
-		keyDict.put("g maj", "g \\major");
-		keyDict.put("g min", "g \\minor");
-		keyDict.put("g# maj", "g# \\major");
-		keyDict.put("g# min", "g# \\minor");
-		keyDict.put("a maj", "a \\major");
-		keyDict.put("a min", "a \\minor");
-		keyDict.put("a# maj", "ais \\major");
-		keyDict.put("a# min", "ais \\minor");
-		keyDict.put("b major", "b \\major");
-		keyDict.put("b min", "b \\minor");
+		keyDict.put("C Maj", "c \\major");
+		keyDict.put("C Min", "c \\minor");
+		keyDict.put("C# Maj", "cis \\major");
+		keyDict.put("C# Min", "cis \\minor");
+		keyDict.put("D Maj", "d \\major");
+		keyDict.put("D Min", "d \\minor");
+		keyDict.put("D# Maj", "dis \\major");
+		keyDict.put("D# Min", "dis \\minor");
+		keyDict.put("E Maj", "e \\major");
+		keyDict.put("E Min", "e \\minor");
+		keyDict.put("F Maj", "f \\major");
+		keyDict.put("F Min", "f \\minor");
+		keyDict.put("F# Maj", "fis \\major");
+		keyDict.put("F# Min", "fis \\minor");
+		keyDict.put("G Maj", "g \\major");
+		keyDict.put("G Min", "g \\minor");
+		keyDict.put("G# Maj", "g# \\major");
+		keyDict.put("G# Min", "g# \\minor");
+		keyDict.put("A Maj", "a \\major");
+		keyDict.put("A Min", "a \\minor");
+		keyDict.put("A# Maj", "ais \\major");
+		keyDict.put("A# Min", "ais \\minor");
+		keyDict.put("B Major", "b \\major");
+		keyDict.put("B Min", "b \\minor");
 	}
 	
 	public void addPitch() {
@@ -163,24 +170,7 @@ public class Transcribe_controller{
 		pitchDict.put(107, "b''''");
 		pitchDict.put(108, "c''''");
 	}
-	
-	public void lilypond_test() {
-		try {
-			FileWriter NewFile = new FileWriter("autolytest.ly");
-			NewFile.write("version");
-			NewFile.write("{");
-			for (int i=0; i<20; i++) {
-				NewFile.write(pitchDict.get(77));
-			}
-			NewFile.write("}");
-			NewFile.close();
-		}
-		catch(IOException e) {
-			System.out.println("An error occurred.");
-			e.printStackTrace();
-		}
-	}
-	
+
 	public void quitButton(ActionEvent event) throws IOException {	
 		Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
 		window.close();
@@ -199,11 +189,21 @@ public class Transcribe_controller{
 		stage.show();
 	}
 	
-	
+	public void previewButton(ActionEvent event) {
+		if (file == null) {
+			JOptionPane.showMessageDialog(null, "Please choose a file!");
+		}
+		else {
+			String path = file;
+			Media media = new Media(new File(path).toURI().toString());
+		    player = new MediaPlayer(media);
+		    player.play();
+		}
+	}
 	
 	public void uploadFile(ActionEvent event) throws IOException{
 		addPitch();
-		lilypond_test();
+		addKey();
 		FileDialog fd = new FileDialog(new JFrame());
 		fd.setVisible(true);
 		File[] f = fd.getFiles();
@@ -215,25 +215,16 @@ public class Transcribe_controller{
 		}
 		String filePath = fd.getFiles()[0].getAbsolutePath();
 		
-		
-		Thread newThread = new Thread(() -> {
-			try {
-				transcribe(filePath);
-			} catch (IOException | ParserConfigurationException | SAXException | ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		});
-		newThread.start();
+		file = filePath;
+		fileLabel.setTextAlignment(TextAlignment.CENTER);
+		fileLabel.setText(f[0].getName());
 	}
 		
-
 	public String xmlReader(File xmlFile) throws ParserConfigurationException, SAXException, IOException {
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder builder = factory.newDocumentBuilder();
 		Document document = builder.parse(xmlFile);
 		document.getDocumentElement().normalize();
-//		Element root = document.getDocumentElement();
 		NodeList nList = document.getElementsByTagName("note");
 		
 		for (int i = 0; i < nList.getLength(); i++) {
@@ -246,98 +237,110 @@ public class Transcribe_controller{
 		NodeList nlist = document.getElementsByTagName("melody_result");
 		org.w3c.dom.Node Node = nlist.item(0);
 		Element element = (Element) Node;
+		System.out.println(element.getAttribute("key"));
 		return(element.getAttribute("key"));
 	}
 
-	public void transcribe(String filePath) throws IOException, ParserConfigurationException, ParseException, SAXException{
-	    CloseableHttpClient httpClient = HttpClients.createDefault();
-	    HttpPost uploadFile = new HttpPost("https://api.sonicAPI.com/analyze/melody?");
-	    MultipartEntityBuilder builder = MultipartEntityBuilder.create();
-	    builder.addTextBody("access_id", "ff2092da-30d6-4ab3-b2eb-a1bd423f60a9", ContentType.TEXT_PLAIN);
-	    
-	    
-	    // This attaches the file to the POST:
-	    File f = new File(filePath);
-	    builder.addBinaryBody(
-	        "input_file",
-	        new FileInputStream(f),
-	        ContentType.APPLICATION_OCTET_STREAM,
-	        f.getName()
-	    );
-	    
-	    String fileName = f.getName();
-	    
-	    builder.addTextBody("begin_seconds", beginTime.getText());
-	    builder.addTextBody("end_seconds", endTime.getText());
-	    
-	    HttpEntity multipart = builder.build();
-	    uploadFile.setEntity(multipart);
-	    CloseableHttpResponse response = httpClient.execute(uploadFile);
-	    HttpEntity responseEntity = response.getEntity();
-	    int code = response.getCode();
-	    
-	    if (code >= 200 && code <= 299) {
-	    	String result = EntityUtils.toString(responseEntity);
-		    System.out.println(result);
-
-		    FileWriter myFile = new FileWriter("output.xml");
-		    myFile.write(result);
-		    File myfile = new File("output.xml");
-		    myFile.close();
-		    String key = xmlReader(myfile);
-		    
-		    
-		    try {
-				FileWriter NewFile = new FileWriter(".ly");
-				NewFile.write("\\header { \ntitle = \""+fileName+"\" \n} \n");
-				NewFile.write("\\version \"2.20.0\"{ \n");
-				double average = 0;
-				//get average pitch
-				for (int i=1; i<pitches.size(); i++) {
-					average = average+pitches.get(i);
-				}
-				//write with the correct clef
-				if (average/pitches.size() < 47) {
-					NewFile.write("\\clef bass \n");
-				}
-				else {
-					NewFile.write("\\clef treble \n");
-				}
-				//write key signature
-				NewFile.write("\\key"+keyDict.get(key)+"\n");
-				//write the rest of the notes
-				for (int i=0; i<pitches.size(); i++) {
-					NewFile.write(pitchDict.get(pitches.get(i)) + " ");
-				}
-				NewFile.write("\n}");
-				NewFile.close();
+	public void transcribe(ActionEvent event) throws IOException, ParserConfigurationException, ParseException, SAXException{
+		if (file == null) {
+			JOptionPane.showMessageDialog(null, "Please choose a file!");
+			return;
+		}
+		Thread newThread = new Thread(() -> {
+			try {
+				CloseableHttpClient httpClient = HttpClients.createDefault();
+			    HttpPost uploadFile = new HttpPost("https://api.sonicAPI.com/analyze/melody?");
+			    MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+			    builder.addTextBody("access_id", "ff2092da-30d6-4ab3-b2eb-a1bd423f60a9", ContentType.TEXT_PLAIN);
+			    
+			    // This attaches the file to the POST:
+			    File f = new File(file);
+			    builder.addBinaryBody(
+			        "input_file",
+			        new FileInputStream(f),
+			        ContentType.APPLICATION_OCTET_STREAM,
+			        f.getName()
+			    );
+			    
+			    String fileName = f.getName();
+			    
+			    builder.addTextBody("begin_seconds", beginTime.getText());
+			    builder.addTextBody("end_seconds", endTime.getText());
+			    
+			    HttpEntity multipart = builder.build();
+			    uploadFile.setEntity(multipart);
+			    CloseableHttpResponse response = httpClient.execute(uploadFile);
+			    HttpEntity responseEntity = response.getEntity();
+			    int code = response.getStatusLine().getStatusCode();
+			    
+			    if (code >= 200 && code <= 299) {
+			    	String result = EntityUtils.toString(responseEntity);
+				    FileWriter myFile = new FileWriter("output.xml");
+				    myFile.write(result);
+				    File myfile = new File("output.xml");
+				    myFile.close();
+				    String key = xmlReader(myfile);
+				    
+				    
+				    try {
+						FileWriter NewFile = new FileWriter(".ly");
+						NewFile.write("\\header { \ntitle = \""+fileName+"\" \n} \n");
+						NewFile.write("\\version \"2.20.0\"{ \n");
+						double average = 0;
+						//get average pitch
+						for (int i=1; i<pitches.size(); i++) {
+							average = average+pitches.get(i);
+						}
+						//write with the correct clef
+						if (average/pitches.size() < 47) {
+							NewFile.write("\\clef bass \n");
+						}
+						else {
+							NewFile.write("\\clef treble \n");
+						}
+						//write key signature
+						NewFile.write("\\key "+keyDict.get(key)+"\n");
+						//write the rest of the notes
+						for (int i=0; i<pitches.size(); i++) {
+							NewFile.write(pitchDict.get(pitches.get(i)) + " ");
+						}
+						NewFile.write("\n}");
+						NewFile.close();
+					}
+					catch(IOException e) {
+						System.out.println("An error occurred.");
+						e.printStackTrace();
+					}
+				    
+				    try {
+				    	String[] params = new String[2];
+				    	params[0] = "LilyPond\\usr\\bin\\lilypond.exe";
+				    	params[1] = ".ly";
+				    	Runtime.getRuntime().exec(params);
+				    }
+				    catch (IOException ex) {
+				    	ex.printStackTrace();
+				    }
+				    
+				    try {
+				    	File File = new File("..\\Music transcribe.pdf");
+				    	Desktop.getDesktop().open(File);
+				    }
+				    catch (IOException ex){
+				    	ex.printStackTrace();
+				    }
+			    }
+			    else if (code == 400) {
+			    	JOptionPane.showMessageDialog(null, "The file chosen does not appear to be a valid file, please choose a mp3 or WAV file." );
+			    }
+			    file = null;
 			}
-			catch(IOException e) {
-				System.out.println("An error occurred.");
+			catch(IOException | ParserConfigurationException | SAXException e) {
 				e.printStackTrace();
 			}
-		    
-		    try {
-		    	String[] params = new String[2];
-		    	params[0] = "LilyPond\\usr\\bin\\lilypond.exe";
-		    	params[1] = ".ly";
-		    	Runtime.getRuntime().exec(params);
-		    }
-		    catch (IOException ex) {
-		    	ex.printStackTrace();
-		    }
-		    
-		    try {
-		    	File File = new File(".pdf");
-		    	Desktop.getDesktop().open(File);
-		    }
-		    catch (IOException ex){
-		    	ex.printStackTrace();
-		    }
-	    }
-	    else if (code == 400) {
-	    	JOptionPane.showMessageDialog(null, "The file chosen does not appear to be a valid file, please choose a mp3 or WAV file." );
-	    }
+		});
+		newThread.start();
+		fileLabel.setText("");
 	}
 }
 

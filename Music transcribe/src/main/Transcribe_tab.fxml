@@ -14,13 +14,16 @@
    <center>
       <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0">
          <children>
-            <Button layoutX="426.0" layoutY="188.0" mnemonicParsing="false" onAction="#uploadFile" text="Transcribe!" />
-            <TextField fx:id="endTime" layoutX="249.0" layoutY="188.0" />
-            <TextField fx:id="beginTime" layoutX="57.0" layoutY="188.0" />
-            <Label layoutX="66.0" layoutY="160.0" text="Transcribe begin time" />
-            <Label layoutX="271.0" layoutY="160.0" text="Transcribe end time" />
-            <Button layoutX="14.0" layoutY="374.0" mnemonicParsing="false" onAction="#quitButton" text="Quit" />
-            <Button layoutX="272.0" layoutY="374.0" mnemonicParsing="false" onAction="#logOutButton" text="Log out" />
+            <Button layoutX="261.0" layoutY="165.0" mnemonicParsing="false" onAction="#transcribe" text="Transcribe!" />
+            <TextField fx:id="endTime" layoutX="322.0" layoutY="125.0" />
+            <TextField fx:id="beginTime" layoutX="130.0" layoutY="125.0" />
+            <Label layoutX="139.0" layoutY="97.0" text="Transcribe begin time" />
+            <Label layoutX="344.0" layoutY="97.0" text="Transcribe end time" />
+            <Button layoutX="14.0" layoutY="362.0" mnemonicParsing="false" onAction="#quitButton" text="Quit" />
+            <Button layoutX="272.0" layoutY="362.0" mnemonicParsing="false" onAction="#logOutButton" text="Log out" />
+            <Button layoutX="270.0" layoutY="284.0" mnemonicParsing="false" onAction="#previewButton" text="Preview" />
+            <Button layoutX="254.0" layoutY="57.0" mnemonicParsing="false" onAction="#uploadFile" text="Choose a file!" />
+            <Label fx:id="fileLabel" layoutX="198.0" layoutY="200.0" maxHeight="-Infinity" maxWidth="600.0" minHeight="-Infinity" minWidth="20.0" prefWidth="200.0" textAlignment="CENTER" />
          </children>
       </AnchorPane>
    </center>

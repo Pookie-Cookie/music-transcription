@@ -6,6 +6,7 @@ import java.util.ResourceBundle;
 
 import javax.swing.JOptionPane;
 
+import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
@@ -22,11 +23,6 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
-
-import java.awt.Desktop;
-import java.net.MalformedURLException;
-import java.net.URISyntaxException;
 
 
 
@@ -47,7 +43,6 @@ public class Menu_Controller implements Initializable {
 		Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
 		window.setScene(SignUpScene);
 		window.show();
-//		window.initStyle(StageStyle.DECORATED);
 	}
 	
 	public void quitButton(ActionEvent event) throws IOException {	
@@ -56,7 +51,9 @@ public class Menu_Controller implements Initializable {
 	}
 	
 	public void logInButton(ActionEvent event) throws IOException, NoSuchAlgorithmException {
-		DBCursor fi = coll.find();
+		BasicDBObject searchQuery = new BasicDBObject();
+		searchQuery.put("username", userEmailBox.getText());
+		DBCursor fi = coll.find(searchQuery);
 		String pass_hash = Helpers.SHA_Hash.toHexString(Helpers.SHA_Hash.getSHA(passwordBox.getText()));
 		boolean found = false;
 		while(fi.hasNext()) {
@@ -87,7 +84,6 @@ public class Menu_Controller implements Initializable {
 		}
 	}
 
-	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		// TODO Auto-generated method stub
 		
