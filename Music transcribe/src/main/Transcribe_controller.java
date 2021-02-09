@@ -2,7 +2,6 @@ package main;
 
 import java.awt.Desktop;
 import java.awt.FileDialog;
-//import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.lang.Math;
@@ -23,7 +22,6 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.scene.control.ProgressBar;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -31,8 +29,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
-import javafx.scene.media.*;
-
 import org.w3c.dom.*;
 import org.xml.sax.SAXException;
 
@@ -54,8 +50,6 @@ public class Transcribe_controller{
 	public HashMap<String, String> keyDict = new HashMap<String, String>();
 	private static MediaPlayer player;
 	private String file = null;
-	private Timeline timeline;
-	private ProgressBar progress;
 	
 	@FXML
 	private Label fileLabel;
@@ -195,7 +189,7 @@ public class Transcribe_controller{
 	public void logOutButton(ActionEvent event) throws IOException{
 		Parent MenuParent = FXMLLoader.load(getClass().getResource("Menu.fxml"));
 		Scene MenuScene = new Scene(MenuParent);
-		
+		player.stop();
 		Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
 		window.close();
 		Stage stage = new Stage();
@@ -217,42 +211,26 @@ public class Transcribe_controller{
 		}
 	}
 	
-	public void handle() {
-		if (timeline != null) {
-			timeline.stop();
-		}
-		timeline = new Timeline();
-		
-	}
-	
-	public void progressBar(ActionEvent event) {
-		
-	}
-	
 	public void previewButton(ActionEvent event) {
 		String path = file;
 		Media media = new Media(new File(path).toURI().toString());
 		timeLabel.setText("0" + "/" + String.valueOf(player.getStopTime().toSeconds()));
 		player.currentTimeProperty().addListener(new ChangeListener<Duration>() {
+			@Override
 			public void changed(ObservableValue<? extends Duration> observable, Duration oldValue, Duration newValue) {
 				progressBar.setValue(newValue.toSeconds());
 			}
 		});
 		
-		player.setOnReady(new Runnable() {
-			public void run() {
-				Duration total = media.getDuration();
-				progressBar.setMax(total.toSeconds());
-			}
-		});
-		
 		progressBar.setOnMousePressed(new EventHandler<MouseEvent>() {
+			@Override
 			public void handle(MouseEvent event) {
 				player.seek(Duration.seconds(progressBar.getValue()));
 			}
 		});
 		
 		progressBar.setOnMouseDragged(new EventHandler<MouseEvent>() {
+			@Override
 			public void handle(MouseEvent event) {
 				player.seek(Duration.seconds(progressBar.getValue()));
 			}
@@ -281,6 +259,13 @@ public class Transcribe_controller{
 		String path = file;
 		Media media = new Media(new File(path).toURI().toString());
 	    player = new MediaPlayer(media);
+	    player.setOnReady(new Runnable() {
+			@Override
+			public void run() {
+				Duration total = media.getDuration();
+				progressBar.setMax(total.toSeconds());
+			}
+		});
 	}
 		
 	public String xmlReader(File xmlFile) throws ParserConfigurationException, SAXException, IOException {
