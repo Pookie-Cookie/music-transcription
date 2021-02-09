@@ -10,18 +10,28 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import java.io.File;
 import javafx.scene.media.*;
+import javafx.scene.media.MediaPlayer.Status;
 import javafx.scene.text.TextAlignment;
+import javafx.animation.Timeline;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
+import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.util.Duration;
+import javafx.scene.media.*;
 
 import org.w3c.dom.*;
 import org.xml.sax.SAXException;
@@ -44,6 +54,8 @@ public class Transcribe_controller{
 	public HashMap<String, String> keyDict = new HashMap<String, String>();
 	private static MediaPlayer player;
 	private String file = null;
+	private Timeline timeline;
+	private ProgressBar progress;
 	
 	@FXML
 	private Label fileLabel;
@@ -51,6 +63,10 @@ public class Transcribe_controller{
 	private TextField beginTime;
 	@FXML
 	private TextField endTime;
+	@FXML
+	private Label timeLabel;
+	@FXML
+	private Slider progressBar;
 	
 	
 	public void addKey() {
@@ -189,16 +205,60 @@ public class Transcribe_controller{
 		stage.show();
 	}
 	
-	public void previewButton(ActionEvent event) {
-		if (file == null) {
-			JOptionPane.showMessageDialog(null, "Please choose a file!");
+	public void pauseButton(ActionEvent event) {
+		System.out.println(player.getStatus());
+		
+		Status status = player.getStatus();
+		if (status == Status.PAUSED) {
+			player.play();
 		}
 		else {
-			String path = file;
-			Media media = new Media(new File(path).toURI().toString());
-		    player = new MediaPlayer(media);
-		    player.play();
+			player.pause();
 		}
+	}
+	
+	public void handle() {
+		if (timeline != null) {
+			timeline.stop();
+		}
+		timeline = new Timeline();
+		
+	}
+	
+	public void progressBar(ActionEvent event) {
+		
+	}
+	
+	public void previewButton(ActionEvent event) {
+		String path = file;
+		Media media = new Media(new File(path).toURI().toString());
+		timeLabel.setText("0" + "/" + String.valueOf(player.getStopTime().toSeconds()));
+		player.currentTimeProperty().addListener(new ChangeListener<Duration>() {
+			public void changed(ObservableValue<? extends Duration> observable, Duration oldValue, Duration newValue) {
+				progressBar.setValue(newValue.toSeconds());
+			}
+		});
+		
+		player.setOnReady(new Runnable() {
+			public void run() {
+				Duration total = media.getDuration();
+				progressBar.setMax(total.toSeconds());
+			}
+		});
+		
+		progressBar.setOnMousePressed(new EventHandler<MouseEvent>() {
+			public void handle(MouseEvent event) {
+				player.seek(Duration.seconds(progressBar.getValue()));
+			}
+		});
+		
+		progressBar.setOnMouseDragged(new EventHandler<MouseEvent>() {
+			public void handle(MouseEvent event) {
+				player.seek(Duration.seconds(progressBar.getValue()));
+			}
+		});
+		
+		player.play();
 	}
 	
 	public void uploadFile(ActionEvent event) throws IOException{
@@ -218,6 +278,9 @@ public class Transcribe_controller{
 		file = filePath;
 		fileLabel.setTextAlignment(TextAlignment.CENTER);
 		fileLabel.setText(f[0].getName());
+		String path = file;
+		Media media = new Media(new File(path).toURI().toString());
+	    player = new MediaPlayer(media);
 	}
 		
 	public String xmlReader(File xmlFile) throws ParserConfigurationException, SAXException, IOException {
@@ -274,7 +337,7 @@ public class Transcribe_controller{
 			    int code = response.getStatusLine().getStatusCode();
 			    
 			    if (code >= 200 && code <= 299) {
-			    	String result = EntityUtils.toString(responseEntity);
+			    	String result = EntityUtils.toString(responseEntity); 
 				    FileWriter myFile = new FileWriter("output.xml");
 				    myFile.write(result);
 				    File myfile = new File("output.xml");

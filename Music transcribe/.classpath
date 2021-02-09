@@ -12,8 +12,5 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="D:/Java code/bson-3.12.7.jar"/>
-	<classpathentry kind="lib" path="D:/Java code/mongodb-driver-3.12.7.jar"/>
-	<classpathentry kind="lib" path="D:/Java code/mongodb-driver-core-3.12.7.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

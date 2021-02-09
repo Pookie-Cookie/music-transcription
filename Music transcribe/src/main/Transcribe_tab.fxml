@@ -5,6 +5,7 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.effect.Blend?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -21,9 +22,12 @@
             <Label layoutX="344.0" layoutY="97.0" text="Transcribe end time" />
             <Button layoutX="14.0" layoutY="362.0" mnemonicParsing="false" onAction="#quitButton" text="Quit" />
             <Button layoutX="272.0" layoutY="362.0" mnemonicParsing="false" onAction="#logOutButton" text="Log out" />
-            <Button layoutX="270.0" layoutY="284.0" mnemonicParsing="false" onAction="#previewButton" text="Preview" />
+            <Button layoutX="188.0" layoutY="244.0" mnemonicParsing="false" onAction="#previewButton" text="Preview" />
             <Button layoutX="254.0" layoutY="57.0" mnemonicParsing="false" onAction="#uploadFile" text="Choose a file!" />
             <Label fx:id="fileLabel" layoutX="198.0" layoutY="200.0" maxHeight="-Infinity" maxWidth="600.0" minHeight="-Infinity" minWidth="20.0" prefWidth="200.0" textAlignment="CENTER" />
+            <Slider fx:id="progressBar" layoutX="100.0" layoutY="293.0" prefHeight="14.0" prefWidth="396.0" />
+            <Button layoutX="318.0" layoutY="244.0" mnemonicParsing="false" onAction="#pauseButton" text="Play/Pause" />
+            <Label fx:id="timeLabel" layoutX="457.0" layoutY="307.0" />
          </children>
       </AnchorPane>
    </center>
