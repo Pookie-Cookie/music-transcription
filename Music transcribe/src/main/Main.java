@@ -15,6 +15,7 @@ import javafx.stage.StageStyle;
 
 
 
+
 public class Main extends Application{
 	public static MongoClient mongo;
 	public static DBCollection mongocoll;

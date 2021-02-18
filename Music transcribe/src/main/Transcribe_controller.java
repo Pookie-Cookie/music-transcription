@@ -11,7 +11,8 @@ import java.io.File;
 import javafx.scene.media.*;
 import javafx.scene.media.MediaPlayer.Status;
 import javafx.scene.text.TextAlignment;
-import javafx.animation.Timeline;
+import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -61,6 +62,8 @@ public class Transcribe_controller{
 	private Label timeLabel;
 	@FXML
 	private Slider progressBar;
+	@FXML
+	private Slider volumeBar;
 	
 	
 	public void addKey() {
@@ -213,8 +216,8 @@ public class Transcribe_controller{
 	
 	public void previewButton(ActionEvent event) {
 		String path = file;
-		Media media = new Media(new File(path).toURI().toString());
-		timeLabel.setText("0" + "/" + String.valueOf(player.getStopTime().toSeconds()));
+//		Media media = new Media(new File(path).toURI().toString());
+//		timeLabel.setText("0" + "/" + String.valueOf(player.getStopTime().toSeconds()));
 		player.currentTimeProperty().addListener(new ChangeListener<Duration>() {
 			@Override
 			public void changed(ObservableValue<? extends Duration> observable, Duration oldValue, Duration newValue) {
@@ -233,6 +236,14 @@ public class Transcribe_controller{
 			@Override
 			public void handle(MouseEvent event) {
 				player.seek(Duration.seconds(progressBar.getValue()));
+			}
+		});
+		
+		volumeBar.setValue(player.getVolume()*100);
+		volumeBar.valueProperty().addListener(new InvalidationListener() {
+			@Override
+			public void invalidated(Observable observable) {
+				player.setVolume(volumeBar.getValue()/100);
 			}
 		});
 		

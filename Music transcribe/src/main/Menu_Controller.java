@@ -72,6 +72,7 @@ public class Menu_Controller implements Initializable {
 					Stage newWindow = new Stage();
 					newWindow.setScene(TranscribeScene);
 					newWindow.getIcons().add(new Image("Images/icon.png"));
+					newWindow.setTitle("Musio");
 					newWindow.show();
 				}
 				else {
